@@ -10,9 +10,9 @@
     - [Story 1](#story-1)
   - [Risks and Mitigations](#risks-and-mitigations)
 - [Design Details](#design-details)
-    - [CPU](#cpu)
-    - [Memory](#memory)
-    - [IO](#io)
+      - [CPU](#cpu)
+      - [Memory](#memory)
+      - [IO](#io)
   - [Test Plan](#test-plan)
       - [Prerequisite testing updates](#prerequisite-testing-updates)
       - [Unit tests](#unit-tests)
@@ -375,7 +375,7 @@ NOTE: Also set `disable-supported` to `true` or `false` in `kep.yaml`.
 Yes
 
 ###### What happens if we reenable the feature if it was previously rolled back?
-No PSI metrics will be availabe in kubelet Summary API nor Prometheus metrics if the
+No PSI metrics will be available in kubelet Summary API nor Prometheus metrics if the
 feature was rolled back.
 
 ###### Are there any tests for feature enablement/disablement?
