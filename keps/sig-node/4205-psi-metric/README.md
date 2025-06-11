@@ -232,7 +232,16 @@ https://storage.googleapis.com/k8s-triage/index.html
 We expect no non-infra related flakes in the last month as a GA graduation criteria.
 -->
 
-- <test>: <link to test coverage>
+Test plan:
+- Enable the feature gate.
+- For each of memory and IO
+  - Schedule workloads to a node that overwhelms the resource.
+  - Ensure the node is marked with corresponding PSI pressure node condition and taint.
+  - Create more workloads and observe that the workloads cannot be scheduled onto this node.
+  - Delete existing workloads to free up the resource.
+  - Ensure the node condition and taint are removed.
+  - Create more workloads and observe the the workloads can be scheduled.
+  - Clean up.
 
 ### Graduation Criteria
 
@@ -566,6 +575,7 @@ NA
 
 - 2023/09/13: Initial proposal
 - 2025/06/11: Drop Phase 1 contents as they are split into a separate KEP. Keep Phase 2 contents.
+- 2025/06/11: Update Alpha requirements.
 
 ## Drawbacks
 
