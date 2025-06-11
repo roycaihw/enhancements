@@ -115,9 +115,11 @@ default threshold to be used for reporting the nodes under heavy resource pressu
 
 **Note:** These actions are tentative, and will depend on different the outcome from testing and discussions with sig-node members, users, and other folks. 
 
+**Note:** In the initial Alpha implementation, we are not introducing node pressure condition for CPU. This is because unlike memory and IO, CPU is a compressible resource. See https://github.com/kubernetes/enhancements/issues/5062 for more details.
+
 1. Introduce a new kubelet config parameter, pressure threshold, to let users specify the pressure percentage beyond which the kubelet would report the node condition to disallow workloads to be scheduled on it.
 
-2. Add new node conditions corresponding to high PSI (beyond threshold levels) on CPU, Memory and IO.
+2. Add new node conditions corresponding to high PSI (beyond threshold levels) on Memory and IO.
 
 ```go
 // These are valid conditions of the node. Currently, we don't have enough information to decide
@@ -125,12 +127,10 @@ default threshold to be used for reporting the nodes under heavy resource pressu
 const (
 …
 	// Conditions based on pressure at system level cgroup.
-	NodeSystemCPUContentionPressure    NodeConditionType = "SystemCPUContentionPressure"
 	NodeSystemMemoryContentionPressure NodeConditionType = "SystemMemoryContentionPressure"
 	NodeSystemDiskContentionPressure   NodeConditionType = "SystemDiskContentionPressure"
 
 	// Conditions based on pressure at kubepods level cgroup.
-	NodeKubepodsCPUContentionPressure    NodeConditionType = "KubepodsCPUContentionPressure"
 	NodeKubepodsMemoryContentionPressure NodeConditionType = "KubepodsMemoryContentionPressure"
 	NodeKubepodsDiskContentionPressure   NodeConditionType = "KubepodsDiskContentionPressure"
 )
@@ -247,6 +247,7 @@ Test plan:
 
 #### Alpha
 
+- Conduct experiments to decide the scope of the node condition (system v.s. kubepods v.s. node) as well as the default threshold
 - Enables kubelet to 
 report node conditions based off PSI values.
 - Initial e2e tests completed and enabled if CRI implementation supports
@@ -255,6 +256,7 @@ it.
 
 #### Beta
 
+- Decide whether CPU PSI will be used for node conditions.
 - Feature gate is enabled by default.
 - Extend e2e test coverage.
 - Allowing time for feedback.
