@@ -306,9 +306,6 @@ to a different kubelet version.
 
 N/A
 
-PSI stats will be available only after CRI and cadvisor have been updated to use runc 1.2.0
-in K8s 1.29. Since `PSI Based Node Conditions` is dependent on kubelet version, and CRI and kubelet are generally updated in tandem, Version skew strategy is not applicable.
-
 ## Production Readiness Review Questionnaire
 
 <!--
@@ -441,7 +438,8 @@ container_pressure_io_stalled_seconds_total
 container_pressure_io_waiting_seconds_total
 ```
 
-kubelet Summary API at the `/stats/summary` endpoint.
+Check if kubelet Summary API at the `/stats/summary` endpoint is properly reporting PSI
+data at node, pod and container levels.
 
 ###### Were upgrade and rollback tested? Was the upgrade->downgrade->upgrade path tested?
 
@@ -526,12 +524,18 @@ kubelet Summary API and Prometheus metrics should continue serving traffics meet
 Pick one more of these and delete the rest.
 -->
 
-- [ ] Metrics
-  - Metric name:
+- [x] Metrics
+  - Metric name: PSI metrics exposed at kubelet `/metrics/cadvisor` endpoint:
+    - `container_pressure_cpu_stalled_seconds_total`
+    - `container_pressure_cpu_waiting_seconds_total`
+    - `container_pressure_memory_stalled_seconds_total`
+    - `container_pressure_memory_waiting_seconds_total`
+    - `container_pressure_io_stalled_seconds_total`
+    - `container_pressure_io_waiting_seconds_total`
   - [Optional] Aggregation method:
-  - Components exposing the metric:
-- [ ] Other (treat as last resort)
-  - Details:
+  - Components exposing the metric: kubelet
+- [x] Other (treat as last resort)
+  - Details: Since this feature only enables kubelet to report more data in metrics. The health of this service is determined by whether kubelet can serve the metrics. An operator can check the rate of kubelet successfully serving the `/metrics/cadvisor` and `/stats/summary` endpoints.
 
 ###### Are there any missing metrics that would be useful to have to improve observability of this feature?
 
@@ -562,7 +566,7 @@ and creating new ones, as well as about cluster-level services (e.g. DNS):
       - Impact of its outage on the feature:
       - Impact of its degraded performance or high-error rates on the feature:
 -->
-Yes, it depends on runc version 1.2.0. This KEP can be implemented only after runc 1.2.0 is released, which is estimated to be released in Q1 2024.
+N/A
 
 ### Scalability
 
